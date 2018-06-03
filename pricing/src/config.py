@@ -1,0 +1,2 @@
+class GlobalConfig(object):
+    currency = '$'
