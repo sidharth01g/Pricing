@@ -1,13 +1,23 @@
 from flask import Blueprint
 
-item_blueprint = Blueprint(name='item', import_name=__name__)
+alert_blueprint = Blueprint(name='item', import_name=__name__)
 
 
-@item_blueprint.route('/item/<string:name>')
-def item_page(name: str):
+@alert_blueprint.route('/new', methods=['POST'])
+def create_alert():
     pass
 
 
-@item_blueprint.route('/load')
-def load_item():
+@alert_blueprint.route('/deactivate/<string:alert_id>')
+def deactivate_alert(alert_id: str):
+    pass
+
+
+@alert_blueprint.route('/alert/<string:alert_id>')
+def get_alert_page(alert_id: str):
+    pass
+
+
+@alert_blueprint.route('/alerts_for_user/<string:user_id>')
+def get_alets_for_user(user_id: str):
     pass
