@@ -21,3 +21,8 @@ def user_alerts():
 @user_blueprint.route('/logout')
 def logout_user():
     pass
+
+
+@user_blueprint.route('/check_alerts/<string:user_id>')
+def check_user_alerts(user_id: str):
+    pass
