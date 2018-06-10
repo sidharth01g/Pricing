@@ -18,10 +18,7 @@ def login_user():
             if User.is_login_valid(email=email, password_hashed=password, configuration=configuration):
                 session['email'] = email
                 return redirect(url_for('.user_alerts'))
-        except user_errors.UserNotExistsError as e:
-            # return render_template('users/login.html', message='Invalid credentials. Please try again')
-            return e.message
-        except user_errors.IncorrectPasswordError as e:
+        except user_errors.UserError as e:
             # return render_template('users/login.html', message='Invalid credentials. Please try again')
             return e.message
 
