@@ -19,13 +19,13 @@ class User(object):
         return '<User with email ID "{}">'.format(self.email)
 
     @staticmethod
-    def is_login_valid(email: str, password: str, configuration: Dict) -> bool:
+    def is_login_valid(email: str, password_hashed: str, configuration: Dict) -> bool:
         """
         Validates an email ID, password combination
 
         Args:
             email: Email ID
-            password: A sha512 hashed password
+            password_hashed: A sha512 hashed password
             configuration: Config dict
         Returns:
             True if valid, False otherwise
@@ -41,15 +41,16 @@ class User(object):
         if result is None:
             # TODO: tell the user that the email is not registered
             logger.debug('No results found for user "{}'.format(email))
-            raise user_errors.UserNotExistsError
+            raise user_errors.UserNotExistsError(message='No user found matching {}'.format(query))
             # return False
 
-        password_valid = Utils.verify_password(password, result['password'])
+        password_valid = Utils.verify_password(password_hashed=password_hashed,
+                                               password_encrypted=result['password_hashed'])
 
         if password_valid is not True:
-            # TODO: tell the user the password is not valid
+            # TODO: tell the user the password_hashed is not valid
             logger.debug('Password not valid for "{}'.format(email))
-            raise user_errors.UserNotExistsError
+            raise user_errors.UserNotExistsError(message='Password validation failed')
             # return False
 
         return True
