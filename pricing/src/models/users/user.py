@@ -10,9 +10,9 @@ logger = Logging.create_rotating_log(module_name=__name__, logging_directory='/t
 
 class User(object):
 
-    def __init__(self, email: str, password: str) -> None:
+    def __init__(self, email: str, password_encrypted: str) -> None:
         self.email = email
-        self.password = password
+        self.password_encrypted = password_encrypted
         self._id = hashlib.sha1(self.email.lower().encode()).hexdigest()
 
     def __repr__(self) -> str:
@@ -38,7 +38,7 @@ class User(object):
         if result is None:
             # TODO: tell the user that the email is not registered
             logger.debug('No results found for user "{}'.format(email))
-            raise user_errors.UserNotExistsError(message='No user found matching {}'.format(query))
+            raise user_errors.UserNotExistsError(message='No user found matching {}'.format(email))
             # return False
 
         password_valid = Utils.verify_password(password_hashed=password_hashed,
@@ -53,5 +53,36 @@ class User(object):
         return True
 
     @staticmethod
-    def register_user(email: str, password_hashed: str) -> None:
-        pass
+    def register_user(email: str, password_hashed: str) -> bool:
+        """
+        Register a new user using an email ID and a sha-512 hashed password_hashed
+
+        Args:
+            email: Email ID
+            password_hashed: sha-512 hashed password_hashed of the user
+
+        Returns:
+            True if registration is successful, False otherwise
+        """
+
+        if Utils.is_valid_email(input_string=email) is not True:
+            # Email ID is not a valid one
+            raise user_errors.InvalidEmailError(message='Email ID "{}" is not valid'.format(email))
+
+        result = pricing.db.find_one(collection_name=pricing.configuration['collections']['users_collection'],
+                                     query={'email': email})
+
+        if result is not None:
+            # User is already registered
+            raise user_errors.UserAlreadyRegisteredError(message='User {} is already registered'.format(email))
+
+        user_new = User(email=email, password_encrypted=Utils.encrypt_password(password_hashed=password_hashed))
+        user_new.insert_into_database()
+        return True
+
+    def insert_into_database(self):
+        pricing.db.insert(collection_name=pricing.configuration['collections']['users_collection'], data=self.__dict__)
+
+    @classmethod
+    def wrap_self(cls, user_instance):
+        return cls(**user_instance)
