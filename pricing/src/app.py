@@ -1,13 +1,10 @@
 from flask import Flask
 from pricing.src.common.logging_base import Logging
-from pricing import configuration
 
 # Import blueprints
 from pricing.src.models.users.views import user_blueprint
 
 logger = Logging.create_rotating_log(module_name=__name__, logging_directory='/tmp')
-
-print(configuration)
 
 app = Flask(__name__)
 app.secret_key = 'abcd1234'
