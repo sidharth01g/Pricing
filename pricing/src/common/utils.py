@@ -1,4 +1,5 @@
 from passlib.hash import pbkdf2_sha512
+import re
 
 
 class Utils(object):
@@ -36,20 +37,17 @@ class Utils(object):
         return pbkdf2_sha512.verify(password_hashed, password_encrypted)
 
     @staticmethod
-    def is_valid_email(email: str) -> bool:
+    def is_valid_email(input_string: str) -> bool:
         """
-        Verifies that a set of conditions are satisfied in a given email string
+        Uses a regular expression matcher to match valid email addresses
 
         Args:
-            email: Email ID
+            input_string: Email ID
 
         Returns:
-            True if all conditions for a valid email ID are satisfied, else False
+            True if the input string is an email, else False
         """
-        conditions = [
-            '@' in email,
-            len(email.split('@')[0]) > 0,
-            len(email.split('@')[-1]) > 0,
-            '.' in email.split('@')[-1],
-        ]
-        return all(condition is True for condition in conditions)
+
+        email_address_matcher = re.compile(pattern='^[\w-]+@([\w-]+.)+[\w]+$')
+
+        return True if email_address_matcher.match(input_string) else False
