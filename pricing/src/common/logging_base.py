@@ -14,7 +14,7 @@ class Logging(object):
 
     @staticmethod
     def create_rotating_log(module_name: str, logging_directory: Union[Path, str],
-                            level: SupportsInt = logging.NOTSET) -> Any:
+                            level: SupportsInt = logging.DEBUG) -> Any:
         """
         Creates and returns a logger instance for a module
 
@@ -40,7 +40,7 @@ class Logging(object):
 
 
 if __name__ == '__main__':
-    lgr = Logging.create_rotating_log(module_name=__name__, logging_directory='/tmp', level=logging.INFO)
+    lgr = Logging.create_rotating_log(module_name=__name__, logging_directory='/tmp', level=logging.DEBUG)
     lgr.debug('test')
     lgr.info('test')
     lgr.warning('test')
