@@ -25,3 +25,21 @@ class IncorrectPasswordError(UserError):
 
     def __repr__(self) -> str:
         return '<IncorrectPasswordError: {}>'.format(self.message)
+
+
+class UserAlreadyRegisteredError(UserError):
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
+    def __repr__(self):
+        return '<UserAlreadyRegisteredError: {}>'.format(self.message)
+
+
+class InvalidEmailError(UserError):
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
+    def __repr__(self):
+        return '<InvalidEmailError: {}>'.format(self.message)
