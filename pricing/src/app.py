@@ -1,20 +1,28 @@
 from flask import Flask
 from pricing.src.common.logging_base import Logging
-import os
-from pathlib2 import Path
-from pricing.src.common.config_loader import Config
+from pricing import configuration
+
+# Import blueprints
+from pricing.src.models.users.views import user_blueprint
 
 logger = Logging.create_rotating_log(module_name=__name__, logging_directory='/tmp')
 
-# Load config
-directory = Path(os.path.dirname(os.path.realpath(__name__)))
-config_filepath = directory.parent / 'config' / 'config.yaml'
-logger.debug('Config file: {}'. format(config_filepath))
-configuration = Config.load_config_yaml(config_filepath=config_filepath)
+print(configuration)
 
 app = Flask(__name__)
+app.secret_key = 'abcd1234'
+
+
+# Register blueprints
+app.register_blueprint(blueprint=user_blueprint, url_prefix='/users')
 
 
 @app.route('/')
 def home():
     return 'Welcome!'
+
+
+if __name__ == '__main__':
+    port = 4776
+    logger.info('Starting Pricing Application at port {}'.format(port))
+    app.run(port=port)
