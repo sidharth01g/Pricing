@@ -12,7 +12,6 @@ print(configuration)
 app = Flask(__name__)
 app.secret_key = 'abcd1234'
 
-
 # Register blueprints
 app.register_blueprint(blueprint=user_blueprint, url_prefix='/users')
 
