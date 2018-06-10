@@ -1,6 +1,6 @@
 from flask import Blueprint, request, session, url_for, redirect, render_template
 from pricing.src.models.users.user import User
-from pricing import configuration
+import pricing
 from pricing.src.common.logging_base import Logging
 import pricing.src.models.users.errors as user_errors
 
@@ -15,7 +15,7 @@ def login_user():
         email = request.form['email']
         password = request.form['password_hashed']
         try:
-            if User.is_login_valid(email=email, password_hashed=password, configuration=configuration):
+            if User.is_login_valid(email=email, password_hashed=password, configuration=pricing.configuration):
                 session['email'] = email
                 return redirect(url_for('.user_alerts'))
         except user_errors.UserError as e:
