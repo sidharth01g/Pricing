@@ -13,11 +13,11 @@ def login_user():
     logger.debug('Received HTTP request to user login endpoint with method "{}"'.format(request.method))
     if request.method == 'POST':
         email = request.form['email']
-        password = request.form['password_hashed']
+        password_hashed = request.form['password_hashed']
         try:
-            if User.is_login_valid(email=email, password_hashed=password, configuration=pricing.configuration):
+            if User.is_login_valid(email=email, password_hashed=password_hashed, configuration=pricing.configuration):
                 session['email'] = email
-                return redirect(url_for('.user_alerts'))
+                return redirect(location=url_for(endpoint='.user_alerts', message='Welcome, {}!'.format(email)))
         except user_errors.UserError as e:
             # return render_template('users/login.html', message='Invalid credentials. Please try again')
             return e.message
@@ -26,14 +26,28 @@ def login_user():
         return render_template('users/login.html')
 
 
-@user_blueprint.route('/register')
+@user_blueprint.route('/register', methods=['GET', 'POST'])
 def register_user():
-    pass
+    logger.debug('Received HTTP request to user registration endpoint with method "{}"'.format(request.method))
+    if request.method == 'POST':
+        email = request.form['email']
+        password_hashed = request.form['password_hashed']
+        try:
+            if User.register_user(email=email, password_hashed=password_hashed) is True:
+                session['email'] = email
+                return redirect(location=url_for(endpoint='.user_alerts', message='Registered user {}'.format(email)))
+            else:
+                pass
+        except user_errors.UserError as e:
+            return e.message
+
+    elif request.method == 'GET':
+        pass
 
 
-@user_blueprint.route('/alerts')
-def user_alerts():
-    return "This is the alerts page"
+@user_blueprint.route('/alerts/<string:message>')
+def user_alerts(message: str):
+    return "Alert: {}".format(message)
 
 
 @user_blueprint.route('/logout')
