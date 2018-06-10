@@ -1,4 +1,4 @@
 database_uri: mongodb://127.0.0.0:27017
 database_name: pricing_db
-tables:
-  user_table: users
+collections:
+  users_collection: users_collection
