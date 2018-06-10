@@ -1,5 +1,5 @@
 import hashlib
-from pricing.src.common.database import Database
+import pricing
 from pricing.src.common.utils import Utils
 from typing import Dict
 from pricing.src.common.logging_base import Logging
@@ -30,13 +30,10 @@ class User(object):
         Returns:
             True if valid, False otherwise
         """
-        db_name = configuration['database_name']
-        uri = configuration['database_uri']
-        db = Database(db_name=db_name, uri=uri)
 
         collection_name = configuration['collections']['users_collection']
         query = {'email': email}
-        result = db.find_one(collection_name=collection_name, query=query)
+        result = pricing.db.find_one(collection_name=collection_name, query=query)
 
         if result is None:
             # TODO: tell the user that the email is not registered
@@ -54,3 +51,7 @@ class User(object):
             # return False
 
         return True
+
+    @staticmethod
+    def register_user(email: str, password_hashed: str) -> None:
+        pass
