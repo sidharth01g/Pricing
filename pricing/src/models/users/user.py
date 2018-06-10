@@ -50,7 +50,7 @@ class User(object):
         if password_valid is not True:
             # TODO: tell the user the password_hashed is not valid
             logger.debug('Password not valid for "{}'.format(email))
-            raise user_errors.UserNotExistsError(message='Password validation failed')
+            raise user_errors.IncorrectPasswordError(message='Password validation failed')
             # return False
 
         return True
