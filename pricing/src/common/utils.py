@@ -17,7 +17,7 @@ class Utils(object):
         return pbkdf2_sha512.encrypt(password_hashed)
 
     @staticmethod
-    def verify_pasword(password_hashed: str, password_encrypted: str) -> bool:
+    def verify_password(password_hashed: str, password_encrypted: str) -> bool:
         """
         Takes in a hashed password and a pbkdf2_sha512 encrypted password and  validates the hashed password against the
         encrypted password.
