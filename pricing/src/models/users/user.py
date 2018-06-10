@@ -3,7 +3,7 @@ from pricing.src.common.database import Database
 from pricing.src.common.utils import Utils
 from typing import Dict
 from pricing.src.common.logging_base import Logging
-import pricing.src.models.users.errors import user_errors
+import pricing.src.models.users.errors as user_errors
 
 logger = Logging.create_rotating_log(module_name=__name__, logging_directory='/tmp')
 
@@ -51,3 +51,5 @@ class User(object):
             logger.debug('Password not valid for "{}'.format(email))
             raise user_errors.UserNotExistsError
             # return False
+
+        return True
