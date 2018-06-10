@@ -2,6 +2,7 @@ from flask import Blueprint, request, session, url_for, redirect, render_templat
 from pricing.src.models.users.user import User
 from pricing import configuration
 from pricing.src.common.logging_base import Logging
+import pricing.src.models.users.errors as user_errors
 
 logger = Logging.create_rotating_log(module_name=__name__, logging_directory='/tmp')
 user_blueprint = Blueprint(name='users', import_name=__name__)
@@ -13,11 +14,17 @@ def login_user():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password_hashed']
-        if User.is_login_valid(email=email, password_hashed=password, configuration=configuration):
-            session['email'] = email
-            return redirect(url_for('.user_alerts'))
-        else:
-            return render_template('users/login.html', message='Invalid credentials. Please try again')
+        try:
+            if User.is_login_valid(email=email, password_hashed=password, configuration=configuration):
+                session['email'] = email
+                return redirect(url_for('.user_alerts'))
+        except user_errors.UserNotExistsError as e:
+            # return render_template('users/login.html', message='Invalid credentials. Please try again')
+            return e.message
+        except user_errors.IncorrectPasswordError as e:
+            # return render_template('users/login.html', message='Invalid credentials. Please try again')
+            return e.message
+
     elif request.method == 'GET':
         return render_template('users/login.html')
 
