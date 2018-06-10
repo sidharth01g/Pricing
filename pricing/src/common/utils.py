@@ -4,9 +4,9 @@ from passlib.hash import pbkdf2_sha512
 class Utils(object):
 
     @staticmethod
-    def hash_password(password_hashed: str) -> str:
+    def encrypt_password(password_hashed: str) -> str:
         """
-        Encrypts a password string using pbkdf2_sha512
+        Encrypts a hashed password string using pbkdf2_sha512
         Args:
             password_hashed: a hashed password
 
