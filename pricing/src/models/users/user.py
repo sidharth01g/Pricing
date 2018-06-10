@@ -1,8 +1,53 @@
+import hashlib
+from pricing.src.common.database import Database
+from pricing.src.common.utils import Utils
+from typing import Dict
+from pricing.src.common.logging_base import Logging
+import pricing.src.models.users.errors import user_errors
+
+logger = Logging.create_rotating_log(module_name=__name__, logging_directory='/tmp')
+
+
 class User(object):
 
     def __init__(self, email: str, password: str) -> None:
         self.email = email
         self.password = password
+        self._id = hashlib.sha1(self.email.lower().encode()).hexdigest()
 
     def __repr__(self) -> str:
         return '<User with email ID "{}">'.format(self.email)
+
+    @staticmethod
+    def is_login_valid(email: str, password: str, configuration: Dict) -> bool:
+        """
+        Validates an email ID, password combination
+
+        Args:
+            email: Email ID
+            password: A sha512 hashed password
+            configuration: Config dict
+        Returns:
+            True if valid, False otherwise
+        """
+        db_name = configuration['database_name']
+        uri = configuration['database_uri']
+        db = Database(db_name=db_name, uri=uri)
+
+        collection_name = configuration['collections']['users_collection']
+        query = {'email': email}
+        result = db.find_one(collection_name=collection_name, query=query)
+
+        if result is None:
+            # TODO: tell the user that the email is not registered
+            logger.debug('No results found for user "{}'.format(email))
+            raise user_errors.UserNotExistsError
+            # return False
+
+        password_valid = Utils.verify_password(password, result['password'])
+
+        if password_valid is not True:
+            # TODO: tell the user the password is not valid
+            logger.debug('Password not valid for "{}'.format(email))
+            raise user_errors.UserNotExistsError
+            # return False
