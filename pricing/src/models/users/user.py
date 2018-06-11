@@ -1,9 +1,9 @@
 import hashlib
 import pricing
 from pricing.src.common.utils import Utils
-from typing import Dict
 from pricing.src.common.logging_base import Logging
 import pricing.src.models.users.errors as user_errors
+from typing import Dict
 
 logger = Logging.create_rotating_log(module_name=__name__, logging_directory='/tmp')
 
@@ -84,5 +84,5 @@ class User(object):
         pricing.db.insert(collection_name=pricing.configuration['collections']['users_collection'], data=self.__dict__)
 
     @classmethod
-    def wrap(cls, user_instance: 'User') -> 'cls':
+    def wrap(cls, user_instance: Dict) -> 'User':
         return cls(**user_instance)
