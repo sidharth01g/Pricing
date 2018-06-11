@@ -84,5 +84,5 @@ class User(object):
         pricing.db.insert(collection_name=pricing.configuration['collections']['users_collection'], data=self.__dict__)
 
     @classmethod
-    def wrap(cls, user_instance: 'User'):
+    def wrap(cls, user_instance: 'User') -> 'cls':
         return cls(**user_instance)
