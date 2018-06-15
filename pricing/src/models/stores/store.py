@@ -20,8 +20,18 @@ class Store(object):
     def __repr__(self) -> str:
         return '<Store "{}" with URL prefix "{}">'.format(self.name, self.url_prefix)
 
+    def get_dict(self) -> Dict:
+        return {
+            'name': self.name,
+            'url_prefix': self.url_prefix,
+            'tag_name': self.tag_name,
+            'query': self.query,
+            '_id': self._id,
+        }
+
     def insert_into_database(self):
-        pricing.db.insert(collection_name=pricing.configuration['collections']['stores_collection'], data=self.__dict__)
+        pricing.db.insert(collection_name=pricing.configuration['collections']['stores_collection'],
+                          data=self.get_dict())
 
     @classmethod
     def wrap(cls, store_dict: Dict) -> 'Store':
