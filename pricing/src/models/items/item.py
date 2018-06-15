@@ -1,5 +1,4 @@
 from typing import Dict
-from pricing.src.models.stores.store import Store
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -12,9 +11,8 @@ class Item(object):
     def __init__(self, name: str, url: str, _id: str = None) -> None:
         self.name = name
         self.url = url
-        store = Store.find_by_url(url=self.url)
         self._id = hashlib.sha1((self.url + self.name).encode()).hexdigest() if _id is None else _id
-        self.price = self.load_price(tag_name=store.tag_name, query=store.query)
+        self.price = None
 
     def __repr__(self) -> str:
         return '<Item "{}" with URL "{}">'.format(self.name, self.url)
@@ -38,10 +36,19 @@ class Item(object):
         if type(price) is str:
             price = price.replace(',', '')
 
-        return float(price)
+        price = float(price)
+        self.price = price
+        return self.price
 
     def insert_into_database(self):
         pricing.db.insert(collection_name=pricing.configuration['collections']['items_collection'], data=self.__dict__)
+
+    @classmethod
+    def find_one_by_id(cls, _id: str):
+        result = pricing.db.find_one(collection_name=pricing.configuration['collections']['items_collection'],
+                                     query={'_id': _id})
+        result = cls.wrap(result) if result else result
+        return result
 
     @classmethod
     def wrap(cls, item_dict: Dict) -> 'Item':
