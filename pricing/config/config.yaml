@@ -3,3 +3,5 @@ database_name: pricing_app_db
 collections:
   users_collection: users
   items_collection: items
+  stores_collection: stores
+logging_directory: /tmp
