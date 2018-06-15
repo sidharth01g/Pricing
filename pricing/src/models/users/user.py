@@ -3,20 +3,27 @@ import pricing
 from pricing.src.common.utils import Utils
 from pricing.src.common.logging_base import Logging
 import pricing.src.models.users.errors as user_errors
-from typing import Dict
+from typing import Dict, Optional
 
 logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pricing.configuration['logging_directory'])
 
 
 class User(object):
 
-    def __init__(self, email: str, password_encrypted: str) -> None:
+    def __init__(self, email: str, password_encrypted: str, _id: Optional[str] = None) -> None:
         self.email = email
         self.password_encrypted = password_encrypted
-        self._id = hashlib.sha1(self.email.lower().encode()).hexdigest()
+        self._id = hashlib.sha1(self.email.lower().encode()).hexdigest() if _id is None else _id
 
     def __repr__(self) -> str:
         return '<User with email ID "{}">'.format(self.email)
+
+    def get_dict(self) -> Dict:
+        return {
+            'email': self.email,
+            'password_encrypted': self.password_encrypted,
+            '_id': self._id,
+        }
 
     @staticmethod
     def is_login_valid(email: str, password_hashed: str, configuration: Dict) -> bool:
@@ -81,7 +88,8 @@ class User(object):
         return True
 
     def insert_into_database(self):
-        pricing.db.insert(collection_name=pricing.configuration['collections']['users_collection'], data=self.__dict__)
+        pricing.db.insert(collection_name=pricing.configuration['collections']['users_collection'],
+                          data=self.get_dict())
 
     @classmethod
     def wrap(cls, user_instance: Dict) -> 'User':
