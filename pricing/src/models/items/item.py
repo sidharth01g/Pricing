@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -8,7 +8,7 @@ import hashlib
 
 class Item(object):
 
-    def __init__(self, name: str, url: str, _id: str = None) -> None:
+    def __init__(self, name: str, url: str, _id: Optional[str] = None) -> None:
         self.name = name
         self.url = url
         self._id = hashlib.sha1((self.url + self.name).encode()).hexdigest() if _id is None else _id
