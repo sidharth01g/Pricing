@@ -41,7 +41,8 @@ class Item(object):
         return self.price
 
     def insert_into_database(self):
-        pricing.db.insert(collection_name=pricing.configuration['collections']['items_collection'], data=self.__dict__)
+        pricing.db.insert(collection_name=pricing.configuration['collections']['items_collection'],
+                          data=self.get_dict())
 
     @classmethod
     def find_one_by_id(cls, _id: str):
@@ -53,3 +54,10 @@ class Item(object):
     @classmethod
     def wrap(cls, item_dict: Dict) -> 'Item':
         return cls(**item_dict)
+
+    def get_dict(self) -> Dict:
+        return {
+            'name': self.name,
+            'url': self.url,
+            '_id': self._id,
+        }
