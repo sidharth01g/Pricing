@@ -9,7 +9,7 @@ logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pri
 
 class Store(object):
 
-    def __init__(self, name: str, url_prefix: str, tag_name: str, query: Dict, _id: str = None) -> None:
+    def __init__(self, name: str, url_prefix: str, tag_name: str, query: Dict, _id: Optional[str] = None) -> None:
         self.name = name
         self.url_prefix = url_prefix
         self.tag_name = tag_name
