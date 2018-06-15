@@ -1,7 +1,15 @@
 database_uri: mongodb://127.0.0.1:27017
 database_name: pricing_app_db
+logging_directory: /tmp
+
 collections:
   users_collection: users
   items_collection: items
   stores_collection: stores
-logging_directory: /tmp
+  alerts_collection: alerts
+
+alert_settings:
+  url: https://api.mailgun.net/v3/sandbox2542e41184db4191879ce024f6d79a69.mailgun.org/messages
+  api_key: key-60e2bd83f0bd363ccdab3b58a35ba5eb-47317c98-8d6be305
+  from: postmaster@sandbox2542e41184db4191879ce024f6d79a69.mailgun.org
+  updation_interval_minutes: 10
