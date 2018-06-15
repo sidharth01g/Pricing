@@ -1,5 +1,5 @@
 import pymongo
-from typing import List, Dict
+from typing import List, Dict, Optional
 from pricing.src.common.logging_base import Logging
 
 
@@ -23,6 +23,13 @@ class Database(object):
     def insert(self, collection_name: str, data: Dict) -> None:
         try:
             self.database[collection_name].insert(data)
+        except Exception as e:
+            self.logger.exception(e)
+            raise e
+
+    def update(self, collection_name: str, data: Dict, upsert: Optional[bool] = True) -> None:
+        try:
+            self.database[collection_name].replace_one(filter={'_id': data['_id']}, replacement=data, upsert=upsert)
         except Exception as e:
             self.logger.exception(e)
             raise e
