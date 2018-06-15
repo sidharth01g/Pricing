@@ -21,6 +21,7 @@ class Database(object):
         return '<Database (MongoDB): URI: {}, database: {}>'.format(self.uri, self.database)
 
     def insert(self, collection_name: str, data: Dict) -> None:
+        self.logger.debug('Insert data {} into collection "{}"'.format(data, collection_name))
         try:
             self.database[collection_name].insert(data)
         except Exception as e:
@@ -28,6 +29,7 @@ class Database(object):
             raise e
 
     def update(self, collection_name: str, data: Dict, upsert: Optional[bool] = True) -> None:
+        self.logger.debug('Update data {} in collection "{}" (upsert={})'.format(data, collection_name, upsert))
         try:
             self.database[collection_name].replace_one(filter={'_id': data['_id']}, replacement=data, upsert=upsert)
         except Exception as e:
@@ -35,6 +37,7 @@ class Database(object):
             raise e
 
     def find(self, collection_name: str, query: Dict) -> List[Dict]:
+        self.logger.debug('Find record in collection "{}" using query: {}'.format(collection_name, query))
         assert type(query) is dict
         try:
             results = self.database[collection_name].find(query)
@@ -44,6 +47,7 @@ class Database(object):
         return results
 
     def find_one(self, collection_name: str, query: Dict) -> Dict:
+        self.logger.debug('Find (one record) in collection "{}" using query: {}'.format(collection_name, query))
         assert type(query) is dict
         try:
             result = self.database[collection_name].find_one(query)
