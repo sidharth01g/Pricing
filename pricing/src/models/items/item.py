@@ -5,6 +5,9 @@ from bs4 import BeautifulSoup
 import re
 import pricing
 import hashlib
+from pricing.src.common.logging_base import Logging
+
+logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pricing.configuration['logging_directory'])
 
 
 class Item(object):
@@ -22,9 +25,11 @@ class Item(object):
 
     def load_price(self) -> float:
         # <span id="priceblock_ourprice" class="a-size-medium a-color-price">$349.00</span>
+        logger.debug('Load price for {}'.format(self))
         request = requests.get(self.url)
         content = request.content
         soup = BeautifulSoup(markup=content, features="html.parser")
+        logger.debug('Search tag name "{}" with attributes {}'.format(self.store.tag_name, self.store.query))
         element = soup.find(name=self.store.tag_name, attrs=self.store.query)
 
         string_price = element.text.strip()
@@ -41,6 +46,7 @@ class Item(object):
 
         price = float(price)
         self.price = price
+        logger.debug('Price for item "{}" at "{}" is {}'.format(self.name, self.url, self.price))
         return self.price
 
     def insert_into_database(self):
