@@ -74,3 +74,19 @@ class Alert(object):
     def insert_into_database(self) -> None:
         pricing.db.insert(collection_name=pricing.configuration['collections']['alerts_collection'],
                           data=self.get_dict())
+
+    def update_in_database(self) -> None:
+        pricing.db.update(collection_name=pricing.configuration['collections']['alerts_collection'],
+                          data=self.get_dict(), upsert=True)
+
+    def fetch_item_price(self):
+        assert self.item is not None
+        self.item.load_price()
+        self.last_checked_time = datetime.datetime.utcnow()
+        self.update_in_database()
+        return self.item.price
+
+    def send_email_if_price_reached(self):
+        current_price = self.fetch_item_price()
+        if current_price <= self.price_threshold:
+            self.send_alert_email()
