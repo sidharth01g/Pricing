@@ -1,8 +1,9 @@
 import pymongo
 from typing import List, Dict
 from pricing.src.common.logging_base import Logging
+import pricing
 
-logger = Logging.create_rotating_log(module_name=__name__, logging_directory='/tmp')
+logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pricing.configuration['logging_directory'])
 
 
 class Database(object):

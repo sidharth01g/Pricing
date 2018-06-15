@@ -4,7 +4,7 @@ import pricing
 from pricing.src.common.logging_base import Logging
 import pricing.src.models.users.errors as user_errors
 
-logger = Logging.create_rotating_log(module_name=__name__, logging_directory='/tmp')
+logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pricing.configuration['logging_directory'])
 user_blueprint = Blueprint(name='users', import_name=__name__)
 
 
