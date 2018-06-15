@@ -5,6 +5,9 @@ import hashlib
 import pricing
 import requests
 import datetime
+from pricing.src.common.logging_base import Logging
+
+logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pricing.configuration['logging_directory'])
 
 
 class Alert(object):
@@ -12,7 +15,7 @@ class Alert(object):
     def __init__(self, item_id: str, price_threshold: Union[float, int], user_email: str,
                  last_checked_time: datetime.datetime, _id: Optional[str] = None) -> None:
         # Assert that the item exists in the database
-        self.item = Item.find_one_by_id(_id=self.item_id)
+        self.item = Item.find_one_by_id(_id=item_id)
         assert self.item is not None
 
         # Assert that the user_email is a registered one (i.e present in the users collection)
@@ -30,17 +33,19 @@ class Alert(object):
             self.item.name, self.user_email, GlobalConfig.currency, self.price_threshold)
 
     def send_alert_email(self) -> None:
-        requests.post(
-            url=pricing.configuration['alert_settings']['url'],
-            data={
-                'from': pricing.configuration['alert_settings']['from'],
-                'to': self.user_email,
-                'subject': 'Price for {} is within your limit of ${}'.format(self.item.name, self.price_threshold),
-                'text': None,
-            },
-            auth=pricing.configuration['alert_settings']['api_key']
+        url = pricing.configuration['alert_settings']['url']
+        data = {
+            'from': pricing.configuration['alert_settings']['from'],
+            'to': self.user_email,
+            'subject': 'Price for {} is within your limit of ${}'.format(self.item.name, self.price_threshold),
+            'text': 'Hi! Your item is now available at the price you quoted',
+        }
+        auth = ('api', pricing.configuration['alert_settings']['api_key'])
 
-        )
+        logger.debug('Sending alert data:\n{}'.format(data))
+        logger.debug('URL: {}'.format(url))
+
+        requests.post(url=url, data=data, auth=auth)
 
     @classmethod
     def get_alerts_to_update(cls) -> List['Alert']:
@@ -50,6 +55,7 @@ class Alert(object):
             collection_name=pricing.configuration['collections']['alerts_collection'],
             query={'last_checked_time': {'$lte': cutoff_time}}
         )
+        results = [Alert.wrap(result) for result in results] if results else results
         return results
 
     def get_dict(self) -> Dict:
@@ -80,6 +86,7 @@ class Alert(object):
                           data=self.get_dict(), upsert=True)
 
     def fetch_item_price(self):
+        logger.debug('Fetching price of {}'.format(self.item))
         assert self.item is not None
         self.item.load_price()
         self.last_checked_time = datetime.datetime.utcnow()
@@ -87,6 +94,9 @@ class Alert(object):
         return self.item.price
 
     def send_email_if_price_reached(self):
+        logger.debug('Checking if {} reached threshold price'.format(self))
         current_price = self.fetch_item_price()
+        logger.debug('Price of {} is {}'.format(self.item, current_price))
         if current_price <= self.price_threshold:
+            logger.debug('Alert: {} reached threshold price of {}'.format(self, self.price_threshold))
             self.send_alert_email()
