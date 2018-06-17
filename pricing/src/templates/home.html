@@ -2,7 +2,12 @@
 {% block content %}
 
 <div class="jumbotron">
+    {% if session['email'] %}
+    <h3 class="display-4">Hello, {{ session['email'] }}!</h3>
+    {% else %}
     <h3 class="display-4">Hello, there!</h3>
+    {% endif %}
+
     <p class="lead">Create alerts for stuff that you want to buy online. We notify you when the price of an item you
         wish to buy is within your quoted budget</p>
     <hr class="my-4">
