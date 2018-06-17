@@ -2,6 +2,7 @@ import logging
 from pathlib2 import Path
 from typing import Union, SupportsInt, Any
 from logging.handlers import TimedRotatingFileHandler
+import os
 
 
 class Logging(object):
@@ -28,6 +29,7 @@ class Logging(object):
 
         logger = logging.getLogger(name=module_name)
         logger.setLevel(level=level)
+        os.makedirs(logging_directory, exist_ok=True)
 
         log_file = Path(logging_directory) / '{}.log'.format(module_name)
         handler = TimedRotatingFileHandler(filename=str(log_file), when='d', interval=1, backupCount=5)
