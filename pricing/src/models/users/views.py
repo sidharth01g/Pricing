@@ -13,7 +13,8 @@ def login_user():
     logger.debug('Received HTTP request to user login endpoint with method "{}"'.format(request.method))
     if request.method == 'POST':
         email = request.form['email']
-        password_hashed = request.form['password_hashed']
+        password_hashed = request.form['password']
+        logger.debug('Login attempt by user "{}"'.format(email))
         try:
             if User.is_login_valid(email=email, password_hashed=password_hashed, configuration=pricing.configuration):
                 session['email'] = email
@@ -31,7 +32,7 @@ def register_user():
     logger.debug('Received HTTP request to user registration endpoint with method "{}"'.format(request.method))
     if request.method == 'POST':
         email = request.form['email']
-        password_hashed = request.form['password_hashed']
+        password_hashed = request.form['password']
         try:
             if User.register_user(email=email, password_hashed=password_hashed) is True:
                 session['email'] = email
@@ -42,7 +43,7 @@ def register_user():
             return e.message
 
     elif request.method == 'GET':
-        pass
+        return render_template('users/register.html')
 
 
 @user_blueprint.route('/alerts')
@@ -52,6 +53,8 @@ def user_alerts():
 
 @user_blueprint.route('/logout')
 def logout_user():
+    session['email'] = None
+    return redirect(url_for('home'))
     pass
 
 
