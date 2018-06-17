@@ -21,7 +21,7 @@ def login_user():
                 return redirect(location=url_for(endpoint='.user_alerts'))
         except user_errors.UserError as e:
             # return render_template('users/login.html', message='Invalid credentials. Please try again')
-            return e.message
+            return redirect(location=url_for(endpoint='users.login_user'))
 
     elif request.method == 'GET':
         return render_template('users/login.html')
