@@ -49,7 +49,7 @@ class User(object):
             # return False
 
         password_valid = Utils.verify_password(password_hashed=password_hashed,
-                                               password_encrypted=result['password_hashed'])
+                                               password_encrypted=result['password_encrypted'])
 
         if password_valid is not True:
             # TODO: tell the user the password_hashed is not valid
