@@ -1,4 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-<p>Hello there</p>
+
+<div class="jumbotron">
+    <h3 class="display-4">Hello, there!</h3>
+    <p class="lead">Create alerts for stuff that you want to buy online. We notify you when the price of an item you
+        wish to buy is within your quoted budget</p>
+    <hr class="my-4">
+    <p>Just sign up and add items that you wish to track</p>
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('users.register_user') }}" role="button">Sign up</a>
+    </p>
+</div>
+
+
 {% endblock %}
