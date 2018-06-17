@@ -17,7 +17,7 @@ def login_user():
         try:
             if User.is_login_valid(email=email, password_hashed=password_hashed, configuration=pricing.configuration):
                 session['email'] = email
-                return redirect(location=url_for(endpoint='.user_alerts', message='Welcome, {}!'.format(email)))
+                return redirect(location=url_for(endpoint='.user_alerts'))
         except user_errors.UserError as e:
             # return render_template('users/login.html', message='Invalid credentials. Please try again')
             return e.message
@@ -35,7 +35,7 @@ def register_user():
         try:
             if User.register_user(email=email, password_hashed=password_hashed) is True:
                 session['email'] = email
-                return redirect(location=url_for(endpoint='.user_alerts', message='Registered user {}'.format(email)))
+                return redirect(location=url_for(endpoint='.user_alerts'))
             else:
                 pass
         except user_errors.UserError as e:
@@ -45,9 +45,9 @@ def register_user():
         pass
 
 
-@user_blueprint.route('/alerts/<string:message>')
-def user_alerts(message: str):
-    return "Alert: {}".format(message)
+@user_blueprint.route('/alerts')
+def user_alerts():
+    return "This is the user alerts page"
 
 
 @user_blueprint.route('/logout')
