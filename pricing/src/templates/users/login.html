@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+
 <form action="{{ url_for('users.login_user') }}" method="post">
+
     <div class="form-size">
         <div class="from-group">
             <label for="email">Email address</label>
