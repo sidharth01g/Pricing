@@ -13,7 +13,7 @@ logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pri
 class Alert(object):
 
     def __init__(self, item_id: str, price_threshold: Union[float, int], user_email: str,
-                 last_checked_time: datetime.datetime, _id: Optional[str] = None) -> None:
+                 last_checked_time: Optional[datetime.datetime] = None, _id: Optional[str] = None) -> None:
         # Assert that the item exists in the database
         self.item = Item.find_one_by_id(_id=item_id)
         assert self.item is not None
