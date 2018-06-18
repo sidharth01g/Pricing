@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h1>Alerts</h1>
+    <div class="list-group">
+        {% for alert in alerts %}
+        <a class="list-group-item" href="#">
+            <h4 class="list-group-item-heading">{{ alert.item.name }}</h4>
+            <p class="list-group-item-text">Alert price: ${{ alert.price_threshold }}</p>
+            {% if alert.item.price %}
+            <p class="list-group-item-text">Last seen price: ${{ alert.item.price }}</p>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
