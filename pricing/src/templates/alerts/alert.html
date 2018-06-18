@@ -1,17 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="page-header">
-    <h1>Alerts</h1>
     <div class="list-group">
-        {% for alert in alerts %}
-        <a class="list-group-item" href="#">
-            <h4 class="list-group-item-heading">{{ alert.item.name }}</h4>
+        <br>
+        <a class="list-group-item" >
+            <p class="list-group-item-text">Alert item: {{ alert.item.name }}</p>
             <p class="list-group-item-text">Alert price: ${{ alert.price_threshold }}</p>
+            <p class="list-group-item-text">Store name: {{ alert.item.store.name }}</p>
             {% if alert.item.price %}
             <p class="list-group-item-text">Last seen price: ${{ alert.item.price }}</p>
+            <p class="list-group-item-text">Last checked: ${{ alert.last_checked_time.strftime('%d-%m-%Y at %H:%M')
+                }}</p>
             {% endif %}
+            <form action="{{ alert.item.url }}" target="_blank">
+                <input type="submit" value="Visit the website" class="btn btn-success"/>
+            </form>
         </a>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}
