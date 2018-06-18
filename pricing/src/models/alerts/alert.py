@@ -85,7 +85,7 @@ class Alert(object):
         pricing.db.update(collection_name=pricing.configuration['collections']['alerts_collection'],
                           data=self.get_dict(), upsert=True)
 
-    def fetch_item_price(self):
+    def fetch_item_price(self) -> float:
         logger.debug('Fetching price of {}'.format(self.item))
         assert self.item is not None
         self.item.load_price()
@@ -93,10 +93,17 @@ class Alert(object):
         self.update_in_database()
         return self.item.price
 
-    def send_email_if_price_reached(self):
+    def send_email_if_price_reached(self) -> None:
         logger.debug('Checking if {} reached threshold price'.format(self))
         current_price = self.fetch_item_price()
         logger.debug('Price of {} is {}'.format(self.item, current_price))
         if current_price <= self.price_threshold:
             logger.debug('Alert: {} reached threshold price of {}'.format(self, self.price_threshold))
             self.send_alert_email()
+
+    @classmethod
+    def find_by_email(cls, email: str) -> List['Alert']:
+        results = pricing.db.find(collection_name=pricing.configuration['collections']['alerts_collection'],
+                                  query={'user_email': email})
+        results = [cls.wrap(result) for result in results] if results else results
+        return results
