@@ -107,3 +107,10 @@ class Alert(object):
                                   query={'user_email': email})
         results = [cls.wrap(result) for result in results] if results else results
         return results
+
+    @classmethod
+    def find_one_by_id(cls, _id: str) -> 'Alert':
+        result = pricing.db.find_one(collection_name=pricing.configuration['collections']['alerts_collection'],
+                                     query={'_id': _id})
+        result = cls.wrap(result) if result else result
+        return result
