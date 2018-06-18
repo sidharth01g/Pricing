@@ -1,11 +1,17 @@
-from flask import Blueprint
+from flask import Blueprint, session, render_template
+from pricing.src.models.alerts.alert import Alert
 
 alert_blueprint = Blueprint(name='alerts', import_name=__name__)
 
 
 @alert_blueprint.route('/')
 def index():
-    return "This is the alerts index page"
+    email = session['email']
+    if email is not None:
+        alerts = Alert.find_by_email(email=email)
+        return render_template('alerts/alert.html', alerts=alerts)
+
+    return render_template('alerts/message.html')
 
 
 @alert_blueprint.route('/new', methods=['POST'])
