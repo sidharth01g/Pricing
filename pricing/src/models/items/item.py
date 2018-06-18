@@ -12,11 +12,11 @@ logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pri
 
 class Item(object):
 
-    def __init__(self, name: str, url: str, _id: Optional[str] = None) -> None:
+    def __init__(self, name: str, url: str, _id: Optional[str] = None, price: Optional[float] = None) -> None:
         self.name = name
         self.url = url
         self._id = hashlib.sha1((self.url + self.name).encode()).hexdigest() if _id is None else _id
-        self.price = None
+        self.price = price
 
         self.store = Store.find_by_url(url=self.url)
 
@@ -53,6 +53,10 @@ class Item(object):
         pricing.db.insert(collection_name=pricing.configuration['collections']['items_collection'],
                           data=self.get_dict())
 
+    def update_in_database(self) -> None:
+        pricing.db.update(collection_name=pricing.configuration['collections']['items_collection'],
+                          data=self.get_dict(), upsert=True)
+
     @classmethod
     def find_one_by_id(cls, _id: str):
         result = pricing.db.find_one(collection_name=pricing.configuration['collections']['items_collection'],
@@ -69,4 +73,5 @@ class Item(object):
             'name': self.name,
             'url': self.url,
             '_id': self._id,
+            'price': self.price,
         }
