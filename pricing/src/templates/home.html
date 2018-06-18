@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<br>
 <div class="jumbotron">
     {% if session['email'] %}
-    <h3 class="display-4">Hello, {{ session['email'] }}!</h3>
+    <h5 class="display-4">Hello, {{ session['email'] }}!</h5>
     {% else %}
     <h3 class="display-4">Hello, there!</h3>
     {% endif %}
