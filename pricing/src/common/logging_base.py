@@ -33,7 +33,7 @@ class Logging(object):
 
         log_file = Path(logging_directory) / '{}.log'.format(module_name)
         handler = TimedRotatingFileHandler(filename=str(log_file), when='d', interval=1, backupCount=5)
-        formatter = logging.Formatter('[%(asctime)s - %(name)s - %(funcName)s - %(levelname)s]: %(message)s')
+        formatter = logging.Formatter('[%(asctime)s - %(name)s - {%(funcName)s} - %(levelname)s]: %(message)s')
         handler.setFormatter(formatter)
 
         logger.addHandler(handler)
