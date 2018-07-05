@@ -1,6 +1,10 @@
-from flask import Blueprint, session, render_template
+import pricing
+from flask import Blueprint, session, render_template, request
 from pricing.src.models.alerts.alert import Alert
+from pricing.src.models.items.item import Item
+from pricing.src.common.logging_base import Logging
 
+logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pricing.configuration['logging_directory'])
 alert_blueprint = Blueprint(name='alerts', import_name=__name__)
 
 
@@ -14,13 +18,26 @@ def index():
     return render_template('alerts/message.html')
 
 
-@alert_blueprint.route('/new', methods=['POST'])
+@alert_blueprint.route('/new', methods=['GET', 'POST'])
 def create_alert():
-    pass
+    logger.debug('Received request: {}'.format(request.method))
+    if request.method == 'POST':
+        name = request.form['name']
+        url = request.form['url']
+        price = float(request.form['price'])
+
+        item = Item(name=name, url=url)
+        item.load_price()
+        item.insert_into_database()
+
+        alert = Alert(item_id=item._id, price_threshold=price, user_email=session['email'])
+        alert.insert_into_database()
+    return render_template('alerts/new_alert.html')
 
 
 @alert_blueprint.route('/deactivate/<string:alert_id>')
 def deactivate_alert(alert_id: str):
+    print(alert_id)
     pass
 
 
@@ -32,4 +49,5 @@ def get_alert_page(alert_id: str):
 
 @alert_blueprint.route('/alerts_for_user/<string:user_id>')
 def get_alerts_for_user(user_id: str):
+    print(user_id)
     pass
