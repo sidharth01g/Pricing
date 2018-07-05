@@ -26,7 +26,8 @@ class Alert(object):
         self.price_threshold = price_threshold
         self.user_email = user_email
         self.last_checked_time = datetime.datetime.utcnow() if last_checked_time is None else last_checked_time
-        self._id = hashlib.sha1(str(self.user_email) + str(self.item_id)).hexdigest() if _id is None else _id
+        self._id = hashlib.sha1(
+            (str(self.user_email) + str(self.item_id)).encode('utf-8')).hexdigest() if _id is None else _id
 
     def __repr__(self) -> str:
         return '<Alert for item "{}" to user "{}" at a threshold of {}{}>'.format(
