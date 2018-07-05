@@ -3,12 +3,14 @@ from flask import Blueprint, session, render_template, request
 from pricing.src.models.alerts.alert import Alert
 from pricing.src.models.items.item import Item
 from pricing.src.common.logging_base import Logging
+from pricing.src.models.users.decorators import requires_login
 
 logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pricing.configuration['logging_directory'])
 alert_blueprint = Blueprint(name='alerts', import_name=__name__)
 
 
 @alert_blueprint.route('/')
+@requires_login
 def index():
     email = session['email']
     if email is not None:
@@ -19,6 +21,7 @@ def index():
 
 
 @alert_blueprint.route('/new', methods=['GET', 'POST'])
+@requires_login
 def create_alert():
     logger.debug('Received request: {}'.format(request.method))
     if request.method == 'POST':
@@ -36,6 +39,7 @@ def create_alert():
 
 
 @alert_blueprint.route('/deactivate/<string:alert_id>')
+@requires_login
 def deactivate_alert(alert_id: str):
     print(alert_id)
     pass
