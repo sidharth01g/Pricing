@@ -82,3 +82,9 @@ class Store(object):
                 logger.debug('Found a match {} for url {}'.format(result, url))
                 return result
         raise store_errors.StoreNotFoundError(message='No store found matching URL "{}"'.format(url))
+
+    @classmethod
+    def get_all_stores(cls):
+        results = pricing.db.find(collection_name=pricing.configuration['collections']['stores_collection'], query={})
+        results = [cls.wrap(store_dict=result) for result in results] if results else results
+        return results
