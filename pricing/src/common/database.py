@@ -55,3 +55,14 @@ class Database(object):
             self.logger.exception(e)
             raise e
         return result
+
+    def remove(self, collection_name: str, query: Dict, multi: bool = False) -> None:
+        assert type(query) is dict
+        try:
+            removed_result = self.database[collection_name].remove(query, multi=multi)
+        except Exception as e:
+            self.logger.exception(e)
+            raise e
+        self.logger.debug('Removed from collection "{}" using query: "{}" with result {}'.format(
+            collection_name, query, removed_result)
+        )
