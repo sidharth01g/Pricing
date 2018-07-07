@@ -100,6 +100,13 @@ class Store(object):
 
     @classmethod
     def get_all_stores(cls):
-        results = pricing.db.find(collection_name=pricing.configuration['collections']['stores_collection'], query={})
-        results = [cls.wrap(store_dict=result) for result in results] if results else results
+        query = {}
+        results = pricing.db.find(collection_name=pricing.configuration['collections']['stores_collection'],
+                                  query=query)
+        if results is None:
+            message = 'No store found matching query: '.format(query)
+            logger.warning(message)
+            raise store_errors.StoreNotFoundError(message=message)
+
+        results = [cls.wrap(store_dict=result) for result in results]
         return results
