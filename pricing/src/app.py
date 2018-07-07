@@ -26,4 +26,4 @@ def home():
 if __name__ == '__main__':
     port = 4776
     logger.info('Starting Pricing Application at port {}'.format(port))
-    app.run(port=port)
+    app.run(port=port, debug=True)
