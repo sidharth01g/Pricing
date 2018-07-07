@@ -13,6 +13,7 @@ logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pri
 class Alert(object):
 
     def __init__(self, item_id: str, price_threshold: Union[float, int], user_email: str,
+                 active: bool = False,
                  last_checked_time: Optional[datetime.datetime] = None, _id: Optional[str] = None) -> None:
         # Assert that the item exists in the database
         self.item = Item.find_one_by_id(_id=item_id)
@@ -28,6 +29,7 @@ class Alert(object):
         self.last_checked_time = datetime.datetime.utcnow() if last_checked_time is None else last_checked_time
         self._id = hashlib.sha1(
             (str(self.user_email) + str(self.item_id)).encode('utf-8')).hexdigest() if _id is None else _id
+        self.active = active
 
     def __repr__(self) -> str:
         return '<Alert for item "{}" to user "{}" at a threshold of {}{}>'.format(
@@ -66,6 +68,7 @@ class Alert(object):
             'user_email': self.user_email,
             'last_checked_time': self.last_checked_time,
             '_id': self._id,
+            'active': self.active
         }
 
     @classmethod
@@ -116,14 +119,14 @@ class Alert(object):
         result = cls.wrap(result) if result else result
         return result
 
-    def refresh(self):
+    def refresh(self) -> None:
         self.item.load_price(update_in_database=True)
         self.last_checked_time = datetime.datetime.utcnow()
         self.update_in_database()
         logger.debug('Reloaded item price for alert ID {}'.format(self._id))
 
     @classmethod
-    def remove_alert(cls, alert_id: str):
+    def remove_alert(cls, alert_id: str) -> None:
         query = {
             '_id': alert_id
         }
@@ -132,3 +135,11 @@ class Alert(object):
         logger.debug('Removed alert ID "{}"'.format(
             alert_id,
         ))
+
+    def activate(self) -> None:
+        self.active = True
+        self.update_in_database()
+
+    def deactivate(self) -> None:
+        self.active = False
+        self.update_in_database()
