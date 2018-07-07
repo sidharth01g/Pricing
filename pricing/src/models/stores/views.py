@@ -26,4 +26,16 @@ def create_store():
         return 'create post'
     return render_template('stores/create_store.html')
 
-# @store_blueprint
+
+@store_blueprint.route('/delete/<string:store_id>', methods=['GET', 'POST'], strict_slashes=False)
+def delete_store():
+    if request.method == 'POST':
+        return 'Delete post'
+    return 'Enter store ID'
+
+
+@store_blueprint.route('/edit/<string:store_id>', methods=['GET', 'POST'], strict_slashes=False)
+def edit_store():
+    if request.method == 'POST':
+        return 'Edit post'
+    return 'Enter store ID'
