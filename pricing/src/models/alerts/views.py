@@ -30,8 +30,7 @@ def create_alert():
         price = float(request.form['price'])
 
         item = Item(name=name, url=url)
-        item.load_price()
-        item.insert_into_database()
+        item.load_price(update_in_database=True)
 
         alert = Alert(item_id=item._id, price_threshold=price, user_email=session['email'])
         alert.insert_into_database()
@@ -42,8 +41,16 @@ def create_alert():
 @requires_login
 def deactivate_alert(alert_id: str):
     logger.debug('Deactivate alert: {}'.format(alert_id))
-    return "TEsT"
-    pass
+    alert = Alert.find_one_by_id(_id=alert_id)
+    return redirect(location=url_for(endpoint='.'))
+
+
+@alert_blueprint.route('/delete/<string:alert_id>')
+@requires_login
+def delete_alert(alert_id: str):
+    logger.debug('Delete alert: {}'.format(alert_id))
+    Alert.remove_alert(alert_id=alert_id)
+    return redirect(location=url_for(endpoint='.'))
 
 
 @alert_blueprint.route('/<string:alert_id>')
