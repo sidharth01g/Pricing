@@ -121,3 +121,14 @@ class Alert(object):
         self.last_checked_time = datetime.datetime.utcnow()
         self.update_in_database()
         logger.debug('Reloaded item price for alert ID {}'.format(self._id))
+
+    @classmethod
+    def remove_alert(cls, alert_id: str):
+        query = {
+            '_id': alert_id
+        }
+        pricing.db.remove(collection_name=pricing.configuration['collections']['alerts_collection'],
+                          query=query)
+        logger.debug('Removed alert ID "{}"'.format(
+            alert_id,
+        ))
