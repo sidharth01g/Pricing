@@ -13,7 +13,7 @@
                 }}</p>
             {% endif %}
             <div>
-                <a class="btn btn-danger" href="{{ url_for('alerts.deactivate_alert', alert_id=alert._id) }}"
+                <a class="btn btn-danger" href="{{ url_for('alerts.delete_alert', alert_id=alert._id) }}"
                    role="button">Delete this alert</a>
                 <a class="btn btn-default" href="{{ alert.item.url }}" role="button" target="_blank">Visit website</a>
                 <a class="btn btn-default" href="{{ url_for('alerts.load_item_price', alert_id=alert._id) }}"
