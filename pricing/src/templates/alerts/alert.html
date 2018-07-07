@@ -3,18 +3,22 @@
 <div class="page-header">
     <div class="list-group">
         <br>
-        <a class="list-group-item" >
+        <a class="list-group-item">
             <p class="list-group-item-text">Alert item: {{ alert.item.name }}</p>
             <p class="list-group-item-text">Alert price: ${{ alert.price_threshold }}</p>
             <p class="list-group-item-text">Store name: {{ alert.item.store.name }}</p>
             {% if alert.item.price %}
             <p class="list-group-item-text">Last seen price: ${{ alert.item.price }}</p>
-            <p class="list-group-item-text">Last checked: ${{ alert.last_checked_time.strftime('%d-%m-%Y at %H:%M')
+            <p class="list-group-item-text">Last checked: {{ alert.last_checked_time.strftime('%d-%m-%Y at %H:%M')
                 }}</p>
             {% endif %}
-            <form action="{{ alert.item.url }}" target="_blank">
-                <input type="submit" value="Visit the website" class="btn btn-success"/>
-            </form>
+            <div>
+                <a class="btn btn-danger" href="{{ url_for('alerts.deactivate_alert', alert_id=alert._id) }}"
+                   role="button">Delete this alert</a>
+                <a class="btn btn-default" href="{{ alert.item.url }}" role="button" target="_blank">Visit website</a>
+                <a class="btn btn-default" href="{{ url_for('alerts.load_item_price', alert_id=alert._id) }}"
+                   role="button">Refresh price</a>
+            </div>
         </a>
     </div>
 </div>
