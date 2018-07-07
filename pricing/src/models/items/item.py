@@ -6,6 +6,7 @@ import re
 import pricing
 import hashlib
 from pricing.src.common.logging_base import Logging
+import datetime
 
 logger = Logging.create_rotating_log(module_name=__name__, logging_directory=pricing.configuration['logging_directory'])
 
@@ -15,7 +16,11 @@ class Item(object):
     def __init__(self, name: str, url: str, _id: Optional[str] = None, price: Optional[float] = None) -> None:
         self.name = name
         self.url = url
-        self._id = hashlib.sha1((self.url + self.name).encode()).hexdigest() if _id is None else _id
+        self._id = hashlib.sha1(
+            (
+                    self.url + self.name + str(datetime.datetime.utcnow())
+            ).encode('utf-8')
+        ).hexdigest() if _id is None else _id
         self.price = price
 
         self.store = Store.find_by_url(url=self.url)
