@@ -115,3 +115,9 @@ class Alert(object):
                                      query={'_id': _id})
         result = cls.wrap(result) if result else result
         return result
+
+    def refresh(self):
+        self.item.load_price(update_in_database=True)
+        self.last_checked_time = datetime.datetime.utcnow()
+        self.update_in_database()
+        logger.debug('Reloaded item price for alert ID {}'.format(self._id))
