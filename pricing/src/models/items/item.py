@@ -23,7 +23,7 @@ class Item(object):
     def __repr__(self) -> str:
         return '<Item "{}" with URL "{}">'.format(self.name, self.url)
 
-    def load_price(self) -> float:
+    def load_price(self, update_in_database: bool = True) -> float:
         # <span id="priceblock_ourprice" class="a-size-medium a-color-price">$349.00</span>
         logger.debug('Load price for {}'.format(self))
         request = requests.get(self.url)
@@ -47,6 +47,9 @@ class Item(object):
         price = float(price)
         self.price = price
         logger.debug('Price for item "{}" at "{}" is {}'.format(self.name, self.url, self.price))
+        if update_in_database is True:
+            self.update_in_database()
+            logger.debug('Updated item {} in database'.format(self._id))
         return self.price
 
     def insert_into_database(self):
