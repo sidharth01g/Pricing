@@ -1,5 +1,5 @@
 import pricing
-from flask import Blueprint, session, render_template, request
+from flask import Blueprint, session, render_template, request, redirect, url_for
 from pricing.src.models.alerts.alert import Alert
 from pricing.src.models.items.item import Item
 from pricing.src.common.logging_base import Logging
@@ -41,17 +41,32 @@ def create_alert():
 @alert_blueprint.route('/deactivate/<string:alert_id>')
 @requires_login
 def deactivate_alert(alert_id: str):
-    print(alert_id)
+    logger.debug('Deactivate alert: {}'.format(alert_id))
+    return "TEsT"
     pass
 
 
 @alert_blueprint.route('/<string:alert_id>')
+@requires_login
 def get_alert_page(alert_id: str):
     alert = Alert.find_one_by_id(_id=alert_id)
     return render_template('alerts/alert.html', alert=alert)
 
 
 @alert_blueprint.route('/alerts_for_user/<string:user_id>')
+@requires_login
 def get_alerts_for_user(user_id: str):
     print(user_id)
+    pass
+
+
+@alert_blueprint.route('/load_item_price/<string:alert_id>')
+@requires_login
+def load_item_price(alert_id: str):
+    alert = Alert.find_one_by_id(_id=alert_id)
+    if not alert:
+        logger.error('Alert ID {} not found in order to load price'.format(alert_id))
+        return redirect(location=url_for(endpoint='.'))
+    alert.refresh()
+    return redirect(location=url_for(endpoint='.get_alert_page', alert_id=alert_id))
     pass
