@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div class="list-group">
+        <br>
+        <a class="list-group-item">
+            <div>
+                <h4 class="list-group-item-text"><strong>{{ store.name }}</strong></h4>
+                <p class="list-group-item-text">URL prefix: {{ store.url_prefix }}</p>
+                <p class="list-group-item-text">Tag name: {{ store.tag_name }}</p>
+                <p class="list-group-item-text">Query: {{ store.query }}</p>
+            </div>
 
-</body>
-</html>
+            <br>
+            <br>
+
+        </a>
+    </div>
+</div>
+{% endblock %}
