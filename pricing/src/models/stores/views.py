@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from pricing.src.models.stores.store import Store
+import pricing.src.models.stores.errors as store_errors
 
 store_blueprint = Blueprint(name='stores', import_name='__name__')
 
@@ -12,8 +13,9 @@ def index():
 
 @store_blueprint.route('/store/<string:store_id>', strict_slashes=False)
 def store_page(store_id: str):
-    store = Store.find_one_by_id(_id=store_id)
-    if not store:
+    try:
+        store = Store.find_one_by_id(_id=store_id)
+    except store_errors.StoreNotFoundError:
         return redirect(location=url_for(endpoint='.index'))
     return render_template('stores/store.html', store=store)
 
@@ -23,3 +25,5 @@ def create_store():
     if request.method == 'POST':
         return 'create post'
     return render_template('stores/create_store.html')
+
+# @store_blueprint
