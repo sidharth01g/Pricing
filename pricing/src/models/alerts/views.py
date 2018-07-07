@@ -42,7 +42,17 @@ def create_alert():
 def deactivate_alert(alert_id: str):
     logger.debug('Deactivate alert: {}'.format(alert_id))
     alert = Alert.find_one_by_id(_id=alert_id)
-    return redirect(location=url_for(endpoint='.'))
+    alert.deactivate()
+    return redirect(location=url_for(endpoint='.get_alert_page', alert_id=alert_id))
+
+
+@alert_blueprint.route('/activate/<string:alert_id>')
+@requires_login
+def activate_alert(alert_id: str):
+    logger.debug('Activate alert: {}'.format(alert_id))
+    alert = Alert.find_one_by_id(_id=alert_id)
+    alert.activate()
+    return redirect(location=url_for(endpoint='.get_alert_page', alert_id=alert_id))
 
 
 @alert_blueprint.route('/delete/<string:alert_id>')
