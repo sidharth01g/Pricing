@@ -39,14 +39,24 @@ class Store(object):
 
     @classmethod
     def find_one_by_id(cls, _id: str) -> Optional['Store']:
-        result = pricing.db.find(collection_name=pricing.configuration['collections']['stores_collection'],
-                                 query={'_id': _id})
-        return cls.wrap(store_dict=result)
+        result = pricing.db.find_one(collection_name=pricing.configuration['collections']['stores_collection'],
+                                     query={'_id': _id})
+        if result is None:
+            message = 'No store found matching ID: {}'.format(_id)
+            logger.warning(message)
+            raise store_errors.StoreNotFoundError(message=message)
+
+        result = cls.wrap(store_dict=result)
+        return result
 
     @classmethod
     def find_by_name(cls, name: str) -> List['Store']:
         results = pricing.db.find(collection_name=pricing.configuration['collections']['stores_collection'],
                                   query={'name': name})
+        if results is None:
+            message = 'No store found matching name: {}'.format(name)
+            logger.warning(message)
+            raise store_errors.StoreNotFoundError(message=message)
 
         results = [cls.wrap(store_dict=result) for result in results]
         return results
@@ -55,6 +65,11 @@ class Store(object):
     def find_one_by_name(cls, name: str) -> Optional['Store']:
         result = pricing.db.find_one(collection_name=pricing.configuration['collections']['stores_collection'],
                                      query={'name': name})
+        if result is None:
+            message = 'No store found matching name: {}'.format(name)
+            logger.warning(message)
+            raise store_errors.StoreNotFoundError(message=message)
+
         result = cls.wrap(store_dict=result)
         return result
 
