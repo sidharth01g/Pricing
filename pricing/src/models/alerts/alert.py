@@ -56,7 +56,7 @@ class Alert(object):
         cutoff_time = datetime.datetime.utcnow() - datetime.timedelta(minutes=updation_interval_minutes)
         results = pricing.db.find(
             collection_name=pricing.configuration['collections']['alerts_collection'],
-            query={'last_checked_time': {'$lte': cutoff_time}}
+            query={'last_checked_time': {'$lte': cutoff_time}, 'active': True}
         )
         results = [Alert.wrap(result) for result in results] if results else results
         return results
