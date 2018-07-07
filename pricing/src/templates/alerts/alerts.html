@@ -8,10 +8,10 @@
         <a class="list-group-item" href="{{ url_for('alerts.get_alert_page', alert_id=alert._id) }}">
             <h4 class="list-group-item-heading">{{ alert.item.name }}</h4>
             <p class="list-group-item-text">Alert price: ${{ alert.price_threshold }}</p>
-            {% if alert.item.price %}
-            <p class="list-group-item-text">Last seen price: ${{ alert.item.price }}</p>
-            <p class="list-group-item-text">Last checked: ${{ alert.last_checked_time.strftime('%d-%m-%Y at %H:%M')
-                }}</p>
+            {% if alert.active == True %}
+            <p class="list-group-item-text">This alert is active</p>
+            {% else %}
+            <p class="list-group-item-text">This alert is <strong>deactivated</strong></p>
             {% endif %}
         </a>
         {% endfor %}
