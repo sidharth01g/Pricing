@@ -35,10 +35,12 @@
             </div>
             <br>
             <br>
+            {% if alert.active == False %}
             <div>
                 <a class="btn btn-danger" href="{{ url_for('alerts.delete_alert', alert_id=alert._id) }}"
                    role="button">Delete this alert</a>
             </div>
+            {% endif %}
         </a>
     </div>
 </div>
