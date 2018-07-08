@@ -40,7 +40,7 @@ def register_user():
             else:
                 pass
         except user_errors.UserError as e:
-            return e.message
+            return render_template('show_message.html', message=e.message)
 
     elif request.method == 'GET':
         return render_template('users/register.html')
