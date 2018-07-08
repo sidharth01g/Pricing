@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="page-header">
+    <h1>Alerts</h1>
+    <h6>Click on individual alert items to modify or view details</h6>
+    <div class="list-group">
+        {% for alert in alerts %}
+        <a class="list-group-item {{ 'list-group-item-warning' if not alert.active else ''}}"
+           href="{{ url_for('alerts.get_alert_page', alert_id=alert._id) }}">
+            <h4 class="list-group-item-heading">
+                {{ '' if alert.active == False else ''}}
+                {{ alert.item.name }}
+            </h4>
+            <p class="list-group-item-text">Alert price: ${{ alert.price_threshold }}</p>
+            {% if alert.active == False %}
+            <p class="list-group-item-text">This alert is <strong>deactivated</strong>. Click to modify</p>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+
+</div>
+<a type="button" class="btn btn-primary" href="{{ url_for('alerts.create_alert') }}"><span
+        class="glyphicon glyphicon-plus"></span>Create an alert</a>
+{% endblock %}

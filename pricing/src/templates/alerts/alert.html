@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div class="list-group">
+        <br>
+        <a class="list-group-item">
+            <div>
+                <h4 class="list-group-item-text"><strong>{{ alert.item.name }}</strong></h4>
+                <p class="list-group-item-text">Your alert price: ${{ alert.price_threshold }}</p>
+                <p class="list-group-item-text">Store: {{ alert.item.store.name }}</p>
+                {% if alert.item.price %}
+                <p class="list-group-item-text">Last seen price: ${{ alert.item.price }}</p>
+                <p class="list-group-item-text">Price last checked on: {{ alert.last_checked_time.strftime('%d-%m-%Y at
+                    %H:%M')
+                    }}</p>
+                {% endif %}
+
+                {% if alert.active == True %}
+                <p class="list-group-item-text">This alert is currently ACTIVE</p>
+                {% else %}
+                <p class="list-group-item-text">This alert is currently NOT active</p>
+                {% endif %}
+            </div>
+            <div>
+                <a class="btn btn-light" href="{{ url_for('alerts.edit_alert', alert_id=alert._id) }}" role="button"
+                   target="_blank">Edit alert</a>
+                <a class="btn btn-light" href="{{ alert.item.url }}" role="button" target="_blank">Visit website</a>
+                <a class="btn btn-light" href="{{ url_for('alerts.load_item_price', alert_id=alert._id) }}"
+                   role="button">Check price now!</a>
+                {% if alert.active == True %}
+                <a class="btn btn-light" href="{{ url_for('alerts.deactivate_alert', alert_id=alert._id) }}"
+                   role="button">Deactivate this alert</a>
+                {% else %}
+                <a class="btn btn-warning" href="{{ url_for('alerts.activate_alert', alert_id=alert._id) }}"
+                   role="button">Activate this alert</a>
+                {% endif %}
+            </div>
+            <br>
+            <br>
+            {% if alert.active == False %}
+            <div>
+                <a class="btn btn-danger" href="{{ url_for('alerts.delete_alert', alert_id=alert._id) }}"
+                   role="button">Delete this alert</a>
+            </div>
+            {% endif %}
+        </a>
+    </div>
+</div>
+{% endblock %}

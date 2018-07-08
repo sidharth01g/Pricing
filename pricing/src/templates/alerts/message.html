@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="alert alert-warning" role="alert">
+    Oops! Please sign in first to create or view alerts
+</div>
+<p class="lead">
+    <a class="btn btn-primary btn-lg" href="{{ url_for('home') }}" role="button">Home</a>
+</p>
+{% endblock %}
