@@ -85,9 +85,9 @@ class Alert(object):
         pricing.db.insert(collection_name=pricing.configuration['collections']['alerts_collection'],
                           data=self.get_dict())
 
-    def update_in_database(self) -> None:
+    def update_in_database(self, upsert: bool = True) -> None:
         pricing.db.update(collection_name=pricing.configuration['collections']['alerts_collection'],
-                          data=self.get_dict(), upsert=True)
+                          data=self.get_dict(), upsert=upsert)
 
     def fetch_item_price(self) -> float:
         logger.debug('Fetching price of {}'.format(self.item))
