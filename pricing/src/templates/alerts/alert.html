@@ -22,6 +22,8 @@
                 {% endif %}
             </div>
             <div>
+                <a class="btn btn-light" href="{{ url_for('alerts.edit_alert', alert_id=alert._id) }}" role="button"
+                   target="_blank">Edit alert</a>
                 <a class="btn btn-light" href="{{ alert.item.url }}" role="button" target="_blank">Visit website</a>
                 <a class="btn btn-light" href="{{ url_for('alerts.load_item_price', alert_id=alert._id) }}"
                    role="button">Check price now!</a>
