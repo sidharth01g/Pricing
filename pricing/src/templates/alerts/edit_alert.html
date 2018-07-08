@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="page-header">
+    <h1>Edit your alert</h1>
+</div>
+<div class="form-size">
+    <form method="post">
+        <div class="form-group">
+            <label for="price">Price limit for your alert on: {{ alert.item.name }}</label>
+            <input type="text" class="form-control" id="price" name="price" placeholder="12.34"
+                   aria-describedby="priceLimitDescription" value="{{ alert.price_threshold }}">
+            <p id="priceLimitDescription" class="help-block">We'll send you an email when the price drops to this
+                value or below</p>
+        </div>
+        <button type="submit" class="btn btn-warning">Update</button>
 
-</body>
-</html>
+    </form>
+
+</div>
+{% endblock %}
