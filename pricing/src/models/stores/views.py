@@ -4,6 +4,7 @@ from pricing.src.models.stores.store import Store
 import pricing.src.models.stores.errors as store_errors
 import json
 import ast
+import pricing.src.models.users.decorators as user_decorators
 
 store_blueprint = Blueprint(name='stores', import_name='__name__')
 
@@ -24,6 +25,7 @@ def store_page(store_id: str) -> str:
 
 
 @store_blueprint.route('/create', methods=['GET', 'POST'], strict_slashes=False)
+@user_decorators.requires_admin
 def create_store() -> str:
     if request.method == 'POST':
         store_name = request.form['name']
@@ -38,6 +40,7 @@ def create_store() -> str:
 
 
 @store_blueprint.route('/delete/<string:store_id>', methods=['GET', 'POST'], strict_slashes=False)
+@user_decorators.requires_admin
 def delete_store(store_id: str) -> str:
     if request.method == 'POST':
         return 'Delete store {}'.format(store_id)
@@ -45,6 +48,7 @@ def delete_store(store_id: str) -> str:
 
 
 @store_blueprint.route('/edit/<string:store_id>', methods=['GET', 'POST'], strict_slashes=False)
+@user_decorators.requires_admin
 def edit_store(store_id: str) -> str:
     try:
         store = Store.find_one_by_id(_id=store_id)
