@@ -14,7 +14,8 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <a class="btn btn-light" role="button">Edit store</a>
+            <a class="btn btn-light" role="button" href="{{ url_for('stores.edit_store', store_id=store._id) }}">Edit
+                store</a>
         </div>
         <br><br>
         <div class="panel-body">
