@@ -18,10 +18,12 @@ def login_user():
         try:
             if User.is_login_valid(email=email, password_hashed=password_hashed, configuration=pricing.configuration):
                 session['email'] = email
-                return redirect(location=url_for(endpoint='.user_alerts'))
+                return render_template('show_message.html',
+                                       message='Welcome, {}. Use the pane above to navigate'.format(email))
         except user_errors.UserError as e:
             # return render_template('users/login.html', message='Invalid credentials. Please try again')
-            return redirect(location=url_for(endpoint='users.login_user'))
+            return render_template('show_message.html',
+                                   message=e.message)
 
     elif request.method == 'GET':
         return render_template('users/login.html')
@@ -36,7 +38,8 @@ def register_user():
         try:
             if User.register_user(email=email, password_hashed=password_hashed) is True:
                 session['email'] = email
-                return redirect(location=url_for(endpoint='.user_alerts'))
+                return render_template('show_message.html',
+                                       message='Welcome, {}. Use the pane above to navigate'.format(email))
             else:
                 pass
         except user_errors.UserError as e:
