@@ -20,7 +20,7 @@ def store_page(store_id: str) -> str:
         store = Store.find_one_by_id(_id=store_id)
     except store_errors.StoreNotFoundError:
         return redirect(location=url_for(endpoint='.index'))
-    return render_template('stores/store.html', store=store)
+    return render_template('stores/store.html', store=store, config=pricing.configuration)
 
 
 @store_blueprint.route('/create', methods=['GET', 'POST'], strict_slashes=False)
