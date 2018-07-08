@@ -33,6 +33,10 @@ class Store(object):
         pricing.db.insert(collection_name=pricing.configuration['collections']['stores_collection'],
                           data=self.get_dict())
 
+    def update_in_database(self, upsert: bool = True):
+        pricing.db.update(collection_name=pricing.configuration['collections']['stores_collection'],
+                          data=self.get_dict(), upsert=upsert)
+
     @classmethod
     def wrap(cls, store_dict: Dict) -> 'Store':
         return cls(**store_dict)
