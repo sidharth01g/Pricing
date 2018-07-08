@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
+import pricing
 from pricing.src.models.stores.store import Store
 import pricing.src.models.stores.errors as store_errors
 import json
@@ -10,7 +11,7 @@ store_blueprint = Blueprint(name='stores', import_name='__name__')
 @store_blueprint.route('/', strict_slashes=False)
 def index() -> str:
     stores = Store.get_all_stores()
-    return render_template('stores/store_index.html', stores=stores)
+    return render_template('stores/store_index.html', stores=stores, config=pricing.configuration)
 
 
 @store_blueprint.route('/store/<string:store_id>', strict_slashes=False)
