@@ -1,0 +1,18 @@
+database_uri: mongodb://127.0.0.1:27017
+database_name: pricing_app_db
+logging_directory: /tmp/pricing-log
+
+collections:
+  users_collection: users
+  items_collection: items
+  stores_collection: stores
+  alerts_collection: alerts
+
+alert_settings:
+  url: https://api.mailgun.net/v3/sandboxakjfoweij32irjfije9fjawe.mailgun.org/messages
+  api_key: None
+  from: postmaster@sandboxakjfoweij32irjfije9fjawe.mailgun.org
+  updation_interval_minutes: 10
+
+admins:
+  - batman@gothamcity.com
