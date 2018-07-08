@@ -41,7 +41,8 @@ class Alert(object):
             'from': pricing.configuration['alert_settings']['from'],
             'to': self.user_email,
             'subject': 'Price for {} is within your limit of ${}'.format(self.item.name, self.price_threshold),
-            'text': 'Hi! Your item is now available at the price you quoted',
+            'text': 'Hi! Your item is now available at the price you quoted. The deal is available at {}'.format(
+                self.item.url),
         }
         auth = ('api', pricing.configuration['alert_settings']['api_key'])
 
