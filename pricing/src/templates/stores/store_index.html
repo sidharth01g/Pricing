@@ -11,7 +11,8 @@
             <p class="list-group-item-text">All URLs in this store start with {{ store.url_prefix }}</p>
         </a>
     {% endfor %}
+    {% if session['email'] in config['admins'] %}
     <a class="btn btn-success" href="{{ url_for('stores.create_store') }}">Create store</a>
-
+    {% endif %}
 </div>
 {% endblock %}
