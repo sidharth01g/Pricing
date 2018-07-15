@@ -1,3 +1,10 @@
+from pathlib2 import Path
+import os
+import sys
+
+current_path = Path(os.path.realpath(__file__))
+sys.path.append(str(current_path.parents[2]))
+
 from flask import Flask, render_template
 from pricing.src.common.logging_base import Logging
 import pricing
@@ -26,4 +33,4 @@ def home():
 if __name__ == '__main__':
     port = 4776
     logger.info('Starting Pricing Application at port {}'.format(port))
-    app.run(port=port, debug=True)
+    app.run(port=port, debug=True, host='0.0.0.0')
